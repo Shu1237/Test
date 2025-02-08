@@ -5,10 +5,17 @@ const cartSlice = createSlice({
         itemsList: [],
         totalQuantity: 0,
         totalPriceAll: 0,
-        showCart: false
+        showCart: false,
+        change:false,
     },
     reducers: {
+        replaceData(state,action){
+            state.totalQuantity= action.payload.totalQuantity
+            state.itemsList= action.payload.itemsList
+            state.totalPriceAll=action.payload.totalPriceAll
+        },
         addToCart(state, action) {
+            state.change=true
             const newItem = action.payload;
             const checkExist = state.itemsList.find((item) => item.id === newItem.id);
             if (checkExist) {
@@ -29,6 +36,7 @@ const cartSlice = createSlice({
 
         },
         removeCart(state, action) {
+            state.change=true
             const id = action.payload;
             const checkExist = state.itemsList.find((item) => item.id === id);
             if (!checkExist) return;
@@ -45,7 +53,7 @@ const cartSlice = createSlice({
         },
 
         up(state, action) {
-
+            state.change=true
             const id = action.payload.id;
             const price = action.payload.price
 
@@ -60,6 +68,7 @@ const cartSlice = createSlice({
                 : 0;  // k bi NA
         },
         reduce(state, action) {
+            state.change=true
             const id = action.payload;
             const checkExist = state.itemsList.find((item) => item.id === id);
             if (checkExist.quantity === 1) {
@@ -69,9 +78,9 @@ const cartSlice = createSlice({
             }
             else {
                 checkExist.quantity--
-                checkExist.totalPrice -= checkExist.price; 
+                checkExist.totalPrice -= checkExist.price;
             }
-            state.totalQuantity--; 
+            state.totalQuantity--;
             state.totalPriceAll = state.itemsList.length > 0
                 ? state.itemsList.reduce((sum, item) => sum + item.totalPrice, 0)
                 : 0;  // k bi NA
@@ -81,5 +90,7 @@ const cartSlice = createSlice({
         }
     }
 })
+
+
 export const cartAction = cartSlice.actions
 export default cartSlice
